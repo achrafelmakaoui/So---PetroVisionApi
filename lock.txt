@@ -1,0 +1,4 @@
+username:makaoui
+pwd:BqeiWUYx3XyTZB7J
+
+mongodb+srv://elmakaouiachraf:V6usCQm1LhRm3qCN@sopetrole.kue5hwo.mongodb.net/
