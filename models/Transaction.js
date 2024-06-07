@@ -12,6 +12,7 @@ const TransactionSchema = new mongoose.Schema(
     produitAcheter: { type: String, required: true },
     points: { type: Number},
     status: { type: String, default:'Encours'},
+    imgCounteurWBon: { type: String},
     imgCounteur: { type: String},
   },
   { timestamps: true }

@@ -8,6 +8,7 @@ const authRoute = require("./routes/auth");
 const clientRoute = require("./routes/client");
 const shoopRoute = require("./routes/shoop");
 const transactionRoute = require("./routes/transaction");
+const accessTokenRoute = require("./routes/AccessToken");
 const path = require('path');
 const cors = require("cors");
 
@@ -34,6 +35,7 @@ app.use("/api/users", userRoute);
 app.use("/api/sopclients", clientRoute);
 app.use("/api/shoop", shoopRoute);
 app.use("/api/transaction", transactionRoute);
+app.use("/api/accessToken", accessTokenRoute);
 
 
 app.listen(process.env.PORT || 5000, () => {
