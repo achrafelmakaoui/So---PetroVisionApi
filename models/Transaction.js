@@ -31,7 +31,7 @@ TransactionSchema.pre('save', function(next) {
 TransactionSchema.post('save', async function (doc) {
   try {
     // Call the FastAPI endpoint to verify the transaction
-    const fastApiUrl = `http://127.0.0.1:8000/verify-transaction/${doc._id}`;  // Change to your FastAPI deployment URL
+    const fastApiUrl = `https://so-petrovision-fraud-detection-1.onrender.com/verify-transaction/${doc._id}`;  // Change to your FastAPI deployment URL
     const response = await axios.post(fastApiUrl);
 
     const client = await Client.findOne({ ncarnet: doc.ncarnet });
