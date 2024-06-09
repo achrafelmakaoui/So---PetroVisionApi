@@ -13,85 +13,25 @@ const {
 const router = require("express").Router();
 
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//       cb(null, 'uploads2/');
-//   },
-//   filename: (req, file, cb) => {
-//       cb(null, Date.now() + path.extname(file.originalname)); // e.g., 1234567890.jpg
-//   }
-// });
-
-// const upload = multer({ storage: storage });
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'uploads2/');
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, Date.now() + path.extname(file.originalname)); // e.g., 1234567890.jpg
-//   }
-// });
-
-// const upload = multer({ storage: storage });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads2/');
+      cb(null, 'uploads2/');
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+      cb(null, Date.now() + path.extname(file.originalname)); // e.g., 1234567890.jpg
   }
 });
 
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png/;
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = fileTypes.test(file.mimetype);
+const upload = multer({ storage: storage });
 
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb('Error: Images Only!');
-    }
-  }
-});
 
-// router.post('/upload', upload.single('photo'), async (req, res) => {
-//   try {
-//     const { ncarnet, nomComplet, station, ca, qte, produitAcheter, points } = req.body;
-//     const imgCounteur = req.file ? req.file.filename : '';
-
-//     console.log('Request body:', req.body);
-//     console.log('Uploaded file:', req.file);
-
-//     const transaction = new Transaction({
-//       ncarnet,
-//       nomComplet,
-//       station,
-//       ca,
-//       qte,
-//       produitAcheter,
-//       points,
-//       imgCounteur,
-//     });
-
-//     await transaction.save();
-//     res.status(201).json({ message: 'Transaction created successfully', transaction });
-//   } catch (error) {
-//     console.error('Error creating transaction:', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// });
-router.post('/upload', upload.fields([{ name: 'imgCounteur', maxCount: 1 }, { name: 'imgCounteurWBon', maxCount: 1 }]), async (req, res) => {
+router.post('/upload', upload.single('photo'), async (req, res) => {
   try {
     const { ncarnet, nomComplet, station, ca, qte, produitAcheter, points } = req.body;
-    const imgCounteur = req.files['imgCounteur'] ? req.files['imgCounteur'][0].filename : '';
-    const imgCounteurWBon = req.files['imgCounteurWBon'] ? req.files['imgCounteurWBon'][0].filename : '';
+    const imgCounteur = req.file ? req.file.filename : '';
 
     console.log('Request body:', req.body);
-    console.log('Uploaded files:', req.files);
+    console.log('Uploaded file:', req.file);
 
     const transaction = new Transaction({
       ncarnet,
@@ -102,7 +42,6 @@ router.post('/upload', upload.fields([{ name: 'imgCounteur', maxCount: 1 }, { na
       produitAcheter,
       points,
       imgCounteur,
-      imgCounteurWBon,
     });
 
     await transaction.save();
@@ -112,6 +51,7 @@ router.post('/upload', upload.fields([{ name: 'imgCounteur', maxCount: 1 }, { na
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
 //CREATE
 
 router.post("/", async (req, res) => {

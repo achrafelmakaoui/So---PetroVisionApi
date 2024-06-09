@@ -12,7 +12,6 @@ const TransactionSchema = new mongoose.Schema(
     produitAcheter: { type: String, required: true },
     points: { type: Number},
     status: { type: String, default:'Encours'},
-    imgCounteurWBon: { type: String},
     imgCounteur: { type: String},
   },
   { timestamps: true }
@@ -31,7 +30,7 @@ TransactionSchema.pre('save', function(next) {
 TransactionSchema.post('save', async function (doc) {
   try {
     // Call the FastAPI endpoint to verify the transaction
-    const fastApiUrl = `https://so-petrovision-fraud-detection-1.onrender.com/verify-transaction/${doc._id}`;  // Change to your FastAPI deployment URL
+    const fastApiUrl = `http://127.0.0.1:8000/verify-transaction/${doc._id}`;  // Change to your FastAPI deployment URL
     const response = await axios.post(fastApiUrl);
 
     const client = await Client.findOne({ ncarnet: doc.ncarnet });
