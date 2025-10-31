@@ -28,11 +28,12 @@ mongoose
     console.log(err);
   });
 
-// === SECURE POWER BI ENDPOINT ===
+// === SECURE POWER BI ENDPOINT (Header ou Query Key) ===
 app.get("/api/powerbi/:collection", async (req, res) => {
   try {
-    // Secure with a secret key (Power BI will use this)
-    const token = req.headers["x-api-key"];
+    // Accept key from header OR query string
+    const token = req.headers["x-api-key"] || req.query.key;
+
     if (token !== process.env.POWERBI_SECRET) {
       return res.status(403).json({ error: "Unauthorized" });
     }
@@ -47,7 +48,7 @@ app.get("/api/powerbi/:collection", async (req, res) => {
       return res.status(404).json({ error: "Collection not found" });
     }
 
-    // Fetch all documents
+    // Fetch all documents from the collection
     const data = await mongoose.connection.db.collection(collection).find({}).toArray();
     res.json(data);
 
