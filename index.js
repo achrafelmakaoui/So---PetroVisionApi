@@ -28,6 +28,35 @@ mongoose
     console.log(err);
   });
 
+// === SECURE POWER BI ENDPOINT ===
+app.get("/api/powerbi/:collection", async (req, res) => {
+  try {
+    // Secure with a secret key (Power BI will use this)
+    const token = req.headers["x-api-key"];
+    if (token !== process.env.POWERBI_SECRET) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const { collection } = req.params;
+
+    // Check if the collection exists
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    const collectionNames = collections.map(c => c.name);
+
+    if (!collectionNames.includes(collection)) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
+
+    // Fetch all documents
+    const data = await mongoose.connection.db.collection(collection).find({}).toArray();
+    res.json(data);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoute);
